@@ -21,6 +21,31 @@
           inherit system;
         };
       };
+
+      devShells.default = pkgs.mkShell {
+        name = "union-devShell";
+        buildInputs = with pkgs; [
+          emmet-language-server
+          httpie
+          jq
+          marksman
+          nil
+          nixfmt
+          nix-tree
+          nodePackages.graphqurl
+          nodePackages_latest.nodejs
+          nodePackages_latest.svelte-language-server
+          nodePackages_latest."@tailwindcss/language-server"
+          nodePackages_latest.typescript-language-server
+          nodePackages_latest.vscode-langservers-extracted
+          openssl
+          protobuf
+          yq
+        ];
+
+        PUPPETEER_SKIP_DOWNLOAD = 1; # avoid npm install downloading chromium
+        NODE_OPTIONS = "--no-warnings"; # avoid useless warnings from nodejs
+      };
     };
   };
   nixConfig = {
