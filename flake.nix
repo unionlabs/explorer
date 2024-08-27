@@ -38,8 +38,6 @@
           nodePackages_latest."@tailwindcss/language-server"
           nodePackages_latest.typescript-language-server
           nodePackages_latest.vscode-langservers-extracted
-          openssl
-          protobuf
           yq
         ];
 
