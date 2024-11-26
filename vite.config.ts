@@ -15,6 +15,22 @@ export default defineConfig({
   define: {
     'process.env': {},
   },
+  server: {
+    proxy: {
+      '/api': {
+        target: 'https://rest.union-testnet-9.cor.systems',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/api/, '')
+      },
+      '/rpc': {
+        target: 'https://rpc.union-testnet-9.cor.systems',
+        changeOrigin: true,
+        secure: false,
+        rewrite: (path) => path.replace(/^\/rpc/, ''),
+      },
+    },
+  },
   plugins: [
     tsconfigPaths(),
     vue({

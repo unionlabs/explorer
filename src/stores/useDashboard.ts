@@ -1,8 +1,8 @@
 import { defineStore } from 'pinia';
-import { get } from '../libs/http';
+import { get } from '@/libs';
 import { useBlockchain } from './useBlockchain';
 import type { Asset } from '@ping-pub/chain-registry-client/dist/types';
-import unionChainConfig from '../assets/chains/testnet/union-testnet-8.json' with { type: 'json' };
+import unionChainConfig from '../assets/chains/testnet/union-testnet-9.json' with { type: 'json' };
 console.info(unionChainConfig)
 
 export enum EndpointType {
