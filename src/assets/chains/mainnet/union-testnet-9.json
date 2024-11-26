@@ -1,10 +1,10 @@
 {
   "chain_name": "union",
   "api": [
-    "/api"
+    "https://rest-testnet-9-cors-proxy.unionlabs.workers.dev/"
   ],
   "rpc": [
-    "/rpc"
+    "https://rpc.union-testnet-9.cor.systems"
   ],
   "sdk_version": "0.47.0",
   "addr_prefix": "union",
