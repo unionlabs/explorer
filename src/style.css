@@ -108,7 +108,7 @@ html[data-theme='dark'] {
     border: none;
   }
 
-  .bg-base-100 {
+  .bg-base-100, .bg-gray-100 {
     background-color: #252528!important;
   }
   .bg-base-200 {
