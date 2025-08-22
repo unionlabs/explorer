@@ -18,5 +18,18 @@
       "base": "au",
       "exponent": 18
     }
+  ],
+  "features": [
+    "dashboard",
+    "governance",
+    "staking",
+    "blocks",
+    "tx",
+    "uptime",
+    "supply",
+    "parameters",
+    "consensus",
+    "cosmwasm",
+    "account"
   ]
 }
