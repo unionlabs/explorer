@@ -3,6 +3,9 @@ node_modules/
 yarn-error.log
 dist
 .idea
-
-.env*
-!.env.example
+._*
+_
+result
+.direnv
+.eslintcache
+.prettiercache
