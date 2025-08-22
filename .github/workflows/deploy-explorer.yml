@@ -1,0 +1,77 @@
+name: Deploy Explorer
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+  workflow_dispatch:
+
+concurrency:
+  group: ${{ github.workflow }}-${{ github.event.pull_request.number || github.sha }}
+  cancel-in-progress: true
+
+env:
+  NODE_OPTIONS: '--no-warnings'
+
+jobs:
+  deploy-preview:
+    runs-on: ['ubuntu-latest']
+    permissions:
+      contents: read
+      pull-requests: write
+    env:
+      npm_config_yes: true
+    environment: 'explorer-preview'
+    if: github.event_name == 'pull_request'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: nixbuild/nix-quick-install-action@v28
+      - name: Fetch from Cache
+        run: |
+          nix develop
+          nix build .#explorer
+      - name: '[preview] 🔶 Publish to Cloudflare Pages'
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_WORKERS_API_TOKEN }}
+        run: npx --yes wrangler@latest pages --project-name="explorer" deploy result >> /tmp/explorer_deploy.txt
+      - name: Set Deploy Output
+        run: |
+          {
+            echo 'DEPLOY_OUTPUT<<EOF'
+            tail -n 2 /tmp/explorer_deploy.txt
+            echo 'EOF'
+          } >> $GITHUB_ENV
+      - name: Comment Site Deploy Results
+        uses: thollander/actions-comment-pull-request@v2
+        with:
+          message: |
+            # Explorer 🔎
+            ${{ env.DEPLOY_OUTPUT }}
+
+            **${{ env.LAST_UPDATED_AT }}**
+          comment_tag: deploy-explorer-preview-result
+
+  deploy-production:
+    runs-on: 'ubuntu-latest'
+    env:
+      npm_config_yes: true
+    environment: 'explorer-production'
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          lfs: true
+      - uses: nixbuild/nix-quick-install-action@v28
+      - name: Fetch from Cache
+        run: |
+          nix develop
+          nix build .#explorer
+      - name: '[production] 🔶 Publish to Cloudflare Pages'
+        env:
+          CLOUDFLARE_ACCOUNT_ID: ${{ secrets.CLOUDFLARE_ACCOUNT_ID }}
+          CLOUDFLARE_API_TOKEN: ${{ secrets.CLOUDFLARE_WORKERS_API_TOKEN }}
+        run: npx --yes wrangler@latest pages --project-name="explorer" --branch="main" deploy result
